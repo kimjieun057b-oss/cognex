@@ -1,4 +1,5 @@
 import type { SVGProps } from "react";
+import type { Dictionary } from "@/i18n/dictionaries";
 
 /* ── 아이콘 ── */
 function IconProcessing(p: SVGProps<SVGSVGElement>) {
@@ -42,38 +43,25 @@ function IconGlobe(p: SVGProps<SVGSVGElement>) {
   );
 }
 
-/* ── 데이터 ── */
-const FEATURES = [
-  {
-    icon: IconProcessing,
-    title: "복잡한 자동화 과제 해결",
-    body: "고성능 처리능력과 뛰어난 유연성으로 어떠한 복잡한 자동화 문제도 정확하고 효율적으로 해결합니다.",
-    tag: "Processing & Flexibility",
-  },
-  {
-    icon: IconAI,
-    title: "AI 검사 프로세스 표준화",
-    body: "OneVision 기반의 통합 플랫폼으로 AI 검사 프로세스를 손쉽게 표준화하고 현장 규모에 맞게 확장합니다.",
-    tag: "OneVision Platform",
-  },
-  {
-    icon: IconSpeed,
-    title: "초고속 AI 비전 검사",
-    body: "AI 기반 초고속 검사 기술로 생산라인을 끊김 없이 운영하며, 불량률을 최소화하고 품질을 극대화합니다.",
-    tag: "High-Speed Inspection",
-  },
-  {
-    icon: IconGlobe,
-    title: "검증된 글로벌 솔루션",
-    body: "전 세계 500개 이상의 기업이 신뢰하는 Cognex AI 비전 솔루션으로 업계 표준을 선도합니다.",
-    tag: "Global Standard",
-  },
+/* ── 정적 데이터 ── */
+const FEATURE_ICONS = [IconProcessing, IconAI, IconSpeed, IconGlobe] as const;
+const FEATURE_TAGS = [
+  "Processing & Flexibility",
+  "OneVision Platform",
+  "High-Speed Inspection",
+  "Global Standard",
 ] as const;
 
 /* ── 메인 컴포넌트 ── */
-export default function CoreFeaturesSection() {
+export default function CoreFeaturesSection({ dict }: { dict: Dictionary["coreFeatures"] }) {
+  const features = dict.features.map((f, i) => ({
+    ...f,
+    icon: FEATURE_ICONS[i],
+    tag: FEATURE_TAGS[i],
+  }));
+
   return (
-    <section id="features" aria-label="핵심 특장점 섹션" className="bg-zinc-50 py-20 pc:py-28">
+    <section id="features" aria-label={dict.ariaLabel} className="bg-zinc-50 py-20 pc:py-28">
       <div className="max-w-300 mx-auto px-5 pc:px-10">
 
         {/* 섹션 헤더 */}
@@ -82,13 +70,13 @@ export default function CoreFeaturesSection() {
             WHY COGNEX
           </p>
           <h2 className="text-[1.85rem] pc:text-[2.4rem] font-bold text-dark leading-tight">
-            Cognex를 선택해야 하는 이유
+            {dict.title}
           </h2>
         </div>
 
         {/* 카드 그리드 */}
         <div className="grid grid-cols-1 pc:grid-cols-4 gap-4">
-          {FEATURES.map((f) => {
+          {features.map((f) => {
             const Icon = f.icon;
             return (
               <div

@@ -5,6 +5,9 @@ import Slider from "react-slick";
 import type { Settings } from "react-slick";
 import Image from "next/image";
 import Link from "next/link";
+import type { Dictionary } from "@/i18n/dictionaries";
+import type { Locale } from "@/i18n/locales";
+import { localeHref } from "@/i18n/href";
 
 /* ── 아이콘 ── */
 function ChevronLeft() {
@@ -29,55 +32,35 @@ function ArrowUpRight() {
   );
 }
 
-/* ── 리소스 데이터 ── */
-const RESOURCES = [
-  {
-    category: "CASE STUDY",
-    title: "QC용 비전 시스템 도입 사례",
-    body: "Cognex 비전 시스템을 활용해 생산 라인 품질 관리를 완전 자동화한 사례를 소개합니다.",
-    image: "/images/solution-semiconductor.png",
-    href: "/resources/qc-vision",
-  },
-  {
-    category: "APPLICATION NOTE",
-    title: "In-Sight 2000 바코드 판독 적용",
-    body: "In-Sight 2000 시리즈를 활용한 고속 바코드 판독 솔루션의 설정 및 운용 가이드입니다.",
-    image: "/images/product-vision-sensor.png",
-    href: "/resources/insight-2000",
-  },
-  {
-    category: "WHITE PAPER",
-    title: "자율 로봇을 위한 물류 비전",
-    body: "자율 이동 로봇(AMR)과 비전 시스템의 통합으로 스마트 물류 센터를 구현하는 방법입니다.",
-    image: "/images/product-robot-vision.png",
-    href: "/resources/amr-vision",
-  },
-  {
-    category: "TECH BRIEF",
-    title: "고성능 바코드 머신비전 가이드",
-    body: "다양한 바코드 유형과 환경에서 최적의 판독률을 확보하기 위한 기술 브리핑입니다.",
-    image: "/images/solution-barcode.png",
-    href: "/resources/barcode-guide",
-  },
-  {
-    category: "CASE STUDY",
-    title: "소비재 제품 품질 보장 솔루션",
-    body: "소비재 생산 라인에서 AI 비전으로 외관 불량과 라벨 오류를 실시간 감지한 사례입니다.",
-    image: "/images/solution-bottle-inspection.png",
-    href: "/resources/consumer-goods",
-  },
-  {
-    category: "APPLICATION NOTE",
-    title: "AI 기반 자동 결함 감지",
-    body: "딥러닝 기반 결함 감지 모델을 빠르게 배포하고 현장에 적용하는 실전 가이드입니다.",
-    image: "/images/solution-ai-inspection.png",
-    href: "/resources/ai-defect",
-  },
+/* ── 정적 데이터 (카테고리 태그/이미지/href — 언어 무관) ── */
+const RESOURCE_STATIC = [
+  { category: "CASE STUDY", image: "/images/solution-semiconductor.png", href: "/resources/qc-vision" },
+  { category: "APPLICATION NOTE", image: "/images/product-vision-sensor.png", href: "/resources/insight-2000" },
+  { category: "WHITE PAPER", image: "/images/product-robot-vision.png", href: "/resources/amr-vision" },
+  { category: "TECH BRIEF", image: "/images/solution-barcode.png", href: "/resources/barcode-guide" },
+  { category: "CASE STUDY", image: "/images/solution-bottle-inspection.png", href: "/resources/consumer-goods" },
+  { category: "APPLICATION NOTE", image: "/images/solution-ai-inspection.png", href: "/resources/ai-defect" },
 ] as const;
 
+type Resource = {
+  category: string;
+  image: string;
+  href: string;
+  title: string;
+  body: string;
+};
+
 /* ── 메인 컴포넌트 ── */
-export default function ResourcesSection() {
+export default function ResourcesSection({
+  lang,
+  dict,
+}: {
+  lang: Locale;
+  dict: Dictionary["resources"];
+}) {
   const sliderRef = useRef<Slider>(null);
+
+  const resources: Resource[] = dict.items.map((item, i) => ({ ...item, ...RESOURCE_STATIC[i] }));
 
   const settings: Settings = {
     dots: false,
@@ -102,10 +85,10 @@ export default function ResourcesSection() {
   return (
     <section
       id="resources"
-      aria-label="인기 리소스 섹션"
+      aria-label={dict.ariaLabel}
       className="bg-dark-nav py-20 pc:py-28 overflow-hidden"
     >
-      <div className="max-w-[1200px] mx-auto px-5 pc:px-10">
+      <div className="max-w-300 mx-auto px-5 pc:px-10">
 
         {/* ── 헤더 ── */}
         <div className="flex items-end justify-between mb-10 pc:mb-12">
@@ -114,7 +97,7 @@ export default function ResourcesSection() {
               POPULAR RESOURCES
             </p>
             <h2 className="text-[1.85rem] pc:text-[2.4rem] font-bold text-white leading-tight">
-              인기 리소스
+              {dict.title}
             </h2>
           </div>
 
@@ -122,7 +105,7 @@ export default function ResourcesSection() {
           <div className="flex items-center gap-2 shrink-0">
             <button
               type="button"
-              aria-label="이전 슬라이드"
+              aria-label={dict.prevAria}
               onClick={() => sliderRef.current?.slickPrev()}
               className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white hover:border-white/60 hover:bg-white/10 transition-all"
             >
@@ -130,7 +113,7 @@ export default function ResourcesSection() {
             </button>
             <button
               type="button"
-              aria-label="다음 슬라이드"
+              aria-label={dict.nextAria}
               onClick={() => sliderRef.current?.slickNext()}
               className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white hover:border-white/60 hover:bg-white/10 transition-all"
             >
@@ -144,9 +127,9 @@ export default function ResourcesSection() {
       {/* ── 슬라이더 (컨테이너 밖까지 넘침) ── */}
       <div className="pl-5 pc:pl-[max(1.25rem,calc(50vw-580px))]">
         <Slider ref={sliderRef} {...settings}>
-          {RESOURCES.map((r) => (
+          {resources.map((r) => (
             <div key={r.href} className="pr-4 pc:pr-5">
-              <ResourceCard resource={r} />
+              <ResourceCard resource={r} lang={lang} detailLabel={dict.detailLabel} />
             </div>
           ))}
         </Slider>
@@ -159,12 +142,16 @@ export default function ResourcesSection() {
 /* ── 리소스 카드 ── */
 function ResourceCard({
   resource,
+  lang,
+  detailLabel,
 }: {
-  resource: (typeof RESOURCES)[number];
+  resource: Resource;
+  lang: Locale;
+  detailLabel: string;
 }) {
   return (
     <Link
-      href={resource.href}
+      href={localeHref(lang, resource.href)}
       className="group block rounded-2xl overflow-hidden bg-[#1e1e1e] hover:bg-[#2a2a2a] transition-colors"
     >
       {/* 이미지 */}
@@ -179,7 +166,7 @@ function ResourceCard({
       </div>
 
       {/* 텍스트 */}
-      <div className="p-5 flex flex-col gap-2 min-h-[160px]">
+      <div className="p-5 flex flex-col gap-2 min-h-40">
         <span className="text-[10px] font-bold tracking-widest text-primary uppercase">
           {resource.category}
         </span>
@@ -191,7 +178,7 @@ function ResourceCard({
         </p>
         <div className="flex justify-end mt-2">
           <span className="inline-flex items-center gap-1 text-xs font-semibold text-white/60 group-hover:text-white transition-colors">
-            자세히 보기
+            {detailLabel}
             <ArrowUpRight />
           </span>
         </div>

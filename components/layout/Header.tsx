@@ -1,8 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { siteConfig } from "@/config/site";
+import { locales, localeNames, type Locale } from "@/i18n/locales";
+import { localeHref } from "@/i18n/href";
+import type { Dictionary } from "@/i18n/dictionaries";
 import {
   SearchIcon,
   GlobeIcon,
@@ -23,8 +27,95 @@ function CognexLogo({ dark = false }: { dark?: boolean }) {
   );
 }
 
-export default function Header() {
+function LanguageSwitcher({
+  lang,
+  ariaLabel,
+  variant,
+}: {
+  lang: Locale;
+  ariaLabel: string;
+  variant: "pc" | "mobile";
+}) {
+  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onClickOutside = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, [open]);
+
+  const switchHref = (target: Locale) => {
+    const rest = pathname.split("/").slice(2).join("/");
+    return `/${target}${rest ? `/${rest}` : ""}`;
+  };
+
+  return (
+    <div ref={containerRef} className="relative">
+      <button
+        type="button"
+        aria-label={ariaLabel}
+        aria-haspopup="menu"
+        aria-expanded={open}
+        onClick={() => setOpen((prev) => !prev)}
+        className={
+          variant === "pc"
+            ? "p-2 rounded-full border border-border hover:bg-gray-100 transition-colors"
+            : ""
+        }
+      >
+        <GlobeIcon className={`w-5 h-5 ${variant === "mobile" ? "text-white" : ""}`} />
+      </button>
+
+      {open && (
+        <ul
+          role="menu"
+          aria-label={ariaLabel}
+          className="absolute right-0 top-full mt-2 w-36 rounded-xl border border-border bg-white py-1.5 shadow-lg z-50"
+        >
+          {locales.map((locale) => (
+            <li key={locale} role="none">
+              <Link
+                href={switchHref(locale)}
+                role="menuitem"
+                onClick={() => setOpen(false)}
+                className={`block px-4 py-2 text-sm hover:bg-gray-100 transition-colors ${
+                  locale === lang ? "font-semibold text-dark" : "text-muted"
+                }`}
+              >
+                {localeNames[locale]}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+export default function Header({
+  lang,
+  dict,
+}: {
+  lang: Locale;
+  dict: Dictionary["header"];
+}) {
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const gnbLinks = siteConfig.gnbLinks.map((link, i) => ({
+    ...link,
+    label: dict.gnbLabels[i],
+  }));
+  const mobileNavLinks = siteConfig.mobileNavLinks.map((link, i) => ({
+    ...link,
+    label: dict.mobileNavLabels[i],
+  }));
 
   return (
     <>
@@ -32,7 +123,7 @@ export default function Header() {
         {/* ── PC 상단 흰색 바 ── */}
         <div className="hidden pc:block bg-white border-b border-border">
           <div className="max-w-400 mx-auto px-10 flex items-center justify-between h-18">
-            <Link href="/" aria-label="Cognex 홈으로 이동">
+            <Link href={localeHref(lang, "/")} aria-label={dict.homeAria}>
               <CognexLogo dark />
             </Link>
 
@@ -42,7 +133,8 @@ export default function Header() {
                 <SearchIcon className="w-4 h-4 text-muted shrink-0" />
                 <input
                   type="search"
-                  placeholder="검색"
+                  placeholder={dict.searchPlaceholder}
+                  aria-label={dict.searchAria}
                   className="flex-1 text-sm outline-none bg-transparent placeholder:text-muted"
                 />
               </label>
@@ -52,18 +144,12 @@ export default function Header() {
                 type="button"
                 className="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded hover:bg-gray-100 transition-colors"
               >
-                MyCognex
+                {dict.myCognex}
                 <ChevronDownIcon className="w-3 h-3" />
               </button>
 
               {/* 언어 */}
-              <button
-                type="button"
-                aria-label="언어 선택"
-                className="p-2 rounded-full border border-border hover:bg-gray-100 transition-colors"
-              >
-                <GlobeIcon className="w-5 h-5" />
-              </button>
+              <LanguageSwitcher lang={lang} ariaLabel={dict.languageAria} variant="pc" />
             </div>
           </div>
         </div>
@@ -71,14 +157,14 @@ export default function Header() {
         {/* ── PC GNB 어두운 바 ── */}
         <nav
           className="hidden pc:block bg-dark-nav"
-          aria-label="주요 내비게이션"
+          aria-label={dict.navAria}
         >
           <div className="max-w-400 mx-auto px-10">
             <ul className="flex items-center justify-center gap-10 h-12">
-              {siteConfig.gnbLinks.map((link) => (
+              {gnbLinks.map((link) => (
                 <li key={link.href}>
                   <Link
-                    href={link.href}
+                    href={localeHref(lang, link.href)}
                     className="text-sm text-white/70 hover:text-white transition-colors py-4 block"
                   >
                     {link.label}
@@ -91,20 +177,18 @@ export default function Header() {
 
         {/* ── 모바일 헤더 바 ── */}
         <div className="pc:hidden bg-dark-nav h-12 flex items-center justify-between px-5">
-          <Link href="/" aria-label="Cognex 홈으로 이동">
+          <Link href={localeHref(lang, "/")} aria-label={dict.homeAria}>
             <CognexLogo />
           </Link>
 
           <div className="flex items-center gap-4">
-            <button type="button" aria-label="검색">
+            <button type="button" aria-label={dict.searchAria}>
               <SearchIcon className="w-5 h-5 text-white" />
             </button>
-            <button type="button" aria-label="언어 선택">
-              <GlobeIcon className="w-5 h-5 text-white" />
-            </button>
+            <LanguageSwitcher lang={lang} ariaLabel={dict.languageAria} variant="mobile" />
             <button
               type="button"
-              aria-label={mobileOpen ? "메뉴 닫기" : "메뉴 열기"}
+              aria-label={mobileOpen ? dict.menuCloseAria : dict.menuOpenAria}
               aria-expanded={mobileOpen}
               onClick={() => setMobileOpen((prev) => !prev)}
             >
@@ -124,14 +208,14 @@ export default function Header() {
           className="fixed inset-0 top-12 z-40 bg-white overflow-y-auto pc:hidden"
           role="dialog"
           aria-modal="true"
-          aria-label="모바일 내비게이션"
+          aria-label={dict.mobileNavAria}
         >
           <nav>
             <ul>
-              {siteConfig.mobileNavLinks.map((link) => (
+              {mobileNavLinks.map((link) => (
                 <li key={link.href} className="border-b border-border">
                   <Link
-                    href={link.href}
+                    href={localeHref(lang, link.href)}
                     className="flex items-center justify-between px-5 py-4 text-base font-medium text-dark hover:bg-gray-50 transition-colors"
                     onClick={() => setMobileOpen(false)}
                   >
@@ -147,16 +231,16 @@ export default function Header() {
             {/* 제품 탐색 CTA 카드 */}
             <div className="mx-5 my-6 rounded-2xl bg-gray-100 px-5 py-5">
               <p className="text-base font-medium leading-snug mb-4 text-dark">
-                어떤 제품이 필요한지
+                {dict.mobileCta.line1}
                 <br />
-                잘 모르시겠다면?
+                {dict.mobileCta.line2}
               </p>
               <Link
-                href="/products"
+                href={localeHref(lang, "/products")}
                 className="flex items-center gap-1 text-sm font-medium text-dark hover:underline"
                 onClick={() => setMobileOpen(false)}
               >
-                제품 찾아보기
+                {dict.mobileCta.linkLabel}
                 <ArrowUpRightIcon className="w-4 h-4" />
               </Link>
             </div>

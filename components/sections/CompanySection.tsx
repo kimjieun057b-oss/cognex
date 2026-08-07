@@ -1,20 +1,17 @@
 "use client";
 
 import { useRef, useState, useEffect } from "react";
+import type { Dictionary } from "@/i18n/dictionaries";
 
-/* ── 데이터 ── */
-const STATS = [
-  { label: "설립일",        value: 1981, suffix: "",  isYear: true  },
-  { label: "글로벌 누적 설치", value: 4000, suffix: "+", isYear: false },
-  { label: "세계 주요 거점",   value: 20,   suffix: "+", isYear: false },
-  { label: "특허 보유수",     value: 1000, suffix: "+", isYear: false },
+/* ── 정적 데이터 ── */
+const STATS_VALUES = [
+  { value: 1981, suffix: "", isYear: true },
+  { value: 4000, suffix: "+", isYear: false },
+  { value: 20, suffix: "+", isYear: false },
+  { value: 1000, suffix: "+", isYear: false },
 ] as const;
 
-const CIRCLES = [
-  { ko: "회사 개요",    en: "Who we are",      opacity: "ff" },
-  { ko: "기술 및 혁신", en: "Technology & AI", opacity: "99" },
-  { ko: "주요 적용 산업", en: "Industries",    opacity: "44" },
-] as const;
+const CIRCLE_OPACITY = ["ff", "99", "44"] as const;
 
 /* ── IntersectionObserver 훅 ── */
 function useInView(threshold = 0.2) {
@@ -60,17 +57,20 @@ function CountUp({
     return () => cancelAnimationFrame(raf);
   }, [started, target, isYear]);
 
-  const display = count >= 1000 ? count.toLocaleString("ko-KR") : String(count);
+  const display = count >= 1000 ? count.toLocaleString("en-US") : String(count);
   return <>{display}{suffix}</>;
 }
 
 /* ── 메인 컴포넌트 ── */
-export default function CompanySection() {
+export default function CompanySection({ dict }: { dict: Dictionary["company"] }) {
   const { ref: topRef,   inView: topIn   } = useInView(0.15);
   const { ref: statsRef, inView: statsIn } = useInView(0.35);
 
+  const circles = dict.circles.map((c, i) => ({ ...c, opacity: CIRCLE_OPACITY[i] }));
+  const stats = dict.stats.map((label, i) => ({ label, ...STATS_VALUES[i] }));
+
   return (
-    <section id="company" aria-label="회사 소개 섹션" className="bg-white overflow-hidden">
+    <section id="company" aria-label={dict.ariaLabel} className="bg-white overflow-hidden">
 
       {/* ── 상단: 텍스트 + 원형 탐색 ── */}
       <div
@@ -90,23 +90,20 @@ export default function CompanySection() {
             COGNEX AI
           </p>
           <h2 className="text-[1.85rem] pc:text-[2.4rem] font-bold text-dark leading-tight mb-5">
-            산업 자동화를 위한 세계 최고의
-            <br />
-            머신 비전 솔루션을 제공합니다.
+            {dict.title}
           </h2>
           <p className="text-sm pc:text-base text-muted leading-relaxed max-w-115">
-            산업 생산에 가장 중요한 핵심 특성을 고유하게 제공함으로써
-            AI 기반 비전 자동화로의 전환을 주도하고 있습니다.
+            {dict.body}
           </p>
         </div>
 
         {/* 원형 탐색 버튼 — PC: 우측 수직 배치 / 모바일: 가운데 수직 배치 */}
         <div className="flex flex-col items-center pc:items-end -space-y-6 pc:-space-y-8 shrink-0 pc:-mr-6">
-          {CIRCLES.map((c, i) => (
+          {circles.map((c, i) => (
             <button
-              key={c.ko}
+              key={c.label}
               type="button"
-              aria-label={c.ko}
+              aria-label={c.label}
               className="flex flex-col items-center justify-center rounded-full
                          w-40 h-40 pc:w-52.5 pc:h-52.5
                          transition-all duration-500 hover:scale-105 active:scale-95"
@@ -120,10 +117,10 @@ export default function CompanySection() {
               }}
             >
               <span className="text-sm pc:text-base font-bold text-dark leading-tight">
-                {c.ko}
+                {c.label}
               </span>
               <span className="text-[11px] pc:text-xs text-dark/50 mt-1">
-                {c.en}
+                {c.sub}
               </span>
             </button>
           ))}
@@ -138,7 +135,7 @@ export default function CompanySection() {
         <div className="pc:hidden mx-5">
           <div className="bg-gray-100 rounded-2xl py-8 px-6">
             <div className="grid grid-cols-2 gap-8">
-              {STATS.map((stat, i) => (
+              {stats.map((stat, i) => (
                 <StatItem key={stat.label} stat={stat} i={i} started={statsIn} />
               ))}
             </div>
@@ -152,7 +149,7 @@ export default function CompanySection() {
           >
             <div className="max-w-250 px-16">
               <div className="grid grid-cols-4 gap-0">
-                {STATS.map((stat, i) => (
+                {stats.map((stat, i) => (
                   <StatItem key={stat.label} stat={stat} i={i} started={statsIn} />
                 ))}
               </div>
@@ -169,7 +166,7 @@ export default function CompanySection() {
 function StatItem({
   stat, i, started,
 }: {
-  stat: typeof STATS[number];
+  stat: { label: string; value: number; suffix: string; isYear: boolean };
   i: number;
   started: boolean;
 }) {

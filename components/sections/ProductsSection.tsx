@@ -4,64 +4,39 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRightIcon } from "@/components/icons";
+import type { Dictionary } from "@/i18n/dictionaries";
+import type { Locale } from "@/i18n/locales";
+import { localeHref } from "@/i18n/href";
 
-const PRODUCTS = [
-  {
-    tag: "MACHINE VISION SYSTEM",
-    title: "비전 센서 및\n시스템",
-    image: "/images/product-smart-light.png",
-    alt: "Cognex 비전 센서 및 시스템",
-    href: "/products/vision-systems",
-  },
-  {
-    tag: "3D MACHINE VISION SYSTEM",
-    title: "3D 비전\n시스템",
-    image: "/images/product-3d-laser.png",
-    alt: "Cognex 3D 비전 시스템",
-    href: "/products/3d-vision",
-  },
-  {
-    tag: "BARCODE READERS & SCANNERS",
-    title: "바코드\n리더기",
-    image: "/images/product-vision-sensor.png",
-    alt: "Cognex 바코드 리더기",
-    href: "/products/barcode-readers",
-  },
-  {
-    tag: "VISION SOFTWARE",
-    title: "비전\n소프트웨어",
-    image: "/images/product-software.png",
-    alt: "Cognex 비전 소프트웨어",
-    href: "/products/software",
-  },
-  {
-    tag: "LOGISTICS SOLUTIONS",
-    title: "물류\n솔루션",
-    image: "/images/solution-barcode.png",
-    alt: "Cognex 물류 솔루션",
-    href: "/products/logistics",
-  },
-  {
-    tag: "MACHINE VISION ACCESSORIES",
-    title: "렌즈, 조명 및\n부속품",
-    image: "/images/product-accessories.png",
-    alt: "Cognex 렌즈 조명 부속품",
-    href: "/products/accessories",
-  },
+const PRODUCT_STATIC = [
+  { tag: "MACHINE VISION SYSTEM", image: "/images/product-smart-light.png", href: "/products/vision-systems" },
+  { tag: "3D MACHINE VISION SYSTEM", image: "/images/product-3d-laser.png", href: "/products/3d-vision" },
+  { tag: "BARCODE READERS & SCANNERS", image: "/images/product-vision-sensor.png", href: "/products/barcode-readers" },
+  { tag: "VISION SOFTWARE", image: "/images/product-software.png", href: "/products/software" },
+  { tag: "LOGISTICS SOLUTIONS", image: "/images/solution-barcode.png", href: "/products/logistics" },
+  { tag: "MACHINE VISION ACCESSORIES", image: "/images/product-accessories.png", href: "/products/accessories" },
 ] as const;
 
-export default function ProductsSection() {
+export default function ProductsSection({
+  lang,
+  dict,
+}: {
+  lang: Locale;
+  dict: Dictionary["products"];
+}) {
   const [active, setActive] = useState(0);
 
+  const products = dict.items.map((item, i) => ({ ...item, ...PRODUCT_STATIC[i] }));
+
   return (
-    <section id="products" aria-label="제품 카테고리 섹션">
+    <section id="products" aria-label={dict.ariaLabel}>
 
       {/* ── PC: 가로 확장 아코디언 ── */}
       <div
         className="hidden pc:flex h-145 border-t border-border"
         onMouseLeave={() => setActive(0)}
       >
-        {PRODUCTS.map((p, i) => (
+        {products.map((p, i) => (
           <article
             key={p.tag}
             onMouseEnter={() => setActive(i)}
@@ -96,11 +71,11 @@ export default function ProductsSection() {
                 }}
               >
                 <Link
-                  href={p.href}
+                  href={localeHref(lang, p.href)}
                   className="inline-flex items-center gap-1 text-sm font-semibold text-dark hover:underline"
                   tabIndex={active === i ? 0 : -1}
                 >
-                  자세히 보기
+                  {dict.detailLabel}
                   <ArrowUpRightIcon className="w-4 h-4" />
                 </Link>
               </div>
@@ -132,7 +107,7 @@ export default function ProductsSection() {
 
       {/* ── 모바일: 세로 아코디언 ── */}
       <div className="pc:hidden divide-y divide-border border-t border-border">
-        {PRODUCTS.map((p, i) => (
+        {products.map((p, i) => (
           <div
             key={p.tag}
             className="relative overflow-hidden cursor-pointer"
