@@ -81,7 +81,7 @@ export default function HeroSection({
               {body}
             </p>
             <Link
-              href={localeHref(lang, "/products")}
+              href={localeHref(lang, "/")}
               className="self-start bg-primary text-dark text-sm font-bold px-6 py-3 hover:bg-primary-hover transition-colors"
             >
               {cta}

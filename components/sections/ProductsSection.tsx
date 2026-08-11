@@ -71,7 +71,7 @@ export default function ProductsSection({
                 }}
               >
                 <Link
-                  href={localeHref(lang, p.href)}
+                  href={localeHref(lang, "/")}
                   className="inline-flex items-center gap-1 text-sm font-semibold text-dark hover:underline"
                   tabIndex={active === i ? 0 : -1}
                 >

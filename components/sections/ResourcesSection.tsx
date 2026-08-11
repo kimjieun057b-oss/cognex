@@ -151,7 +151,7 @@ function ResourceCard({
 }) {
   return (
     <Link
-      href={localeHref(lang, resource.href)}
+      href={localeHref(lang, "/")}
       className="group block rounded-2xl overflow-hidden bg-[#1e1e1e] hover:bg-[#2a2a2a] transition-colors"
     >
       {/* 이미지 */}

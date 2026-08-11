@@ -21,14 +21,17 @@
   --breakpoint-pc: 1366px;
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+ * {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    box-sizing: border-box;
+    word-break: keep-all;
+    outline: 0px solid silver;
+    font-family: 'Noto Sans KR', sans-serif;
+  }
 
 body {
-  background-color: #ffffff;
   color: #1c1c1c;
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -49,3 +52,70 @@ body {
 /* 모바일 가로 스크롤바 숨김 */
 .scrollbar-none::-webkit-scrollbar { display: none; }
 .scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+
+@layer base {
+  h1 {
+    @apply text-[2rem] font-bold leading-[2.2rem]
+  }
+
+  h2 {
+    @apply text-[1.5rem] font-bold leading-[1.8rem] pc:leading-[2.4rem]
+  }
+
+  h3 {
+    @apply text-[1.2rem] font-bold leading-6
+  }
+
+  h4 {
+    @apply text-[1rem] font-bold leading-[1.3rem]
+  }
+
+  h5 {
+    @apply text-[0.9rem] font-bold leading-[1.2rem]
+  }
+
+  p,
+  li {
+    @apply transition-all duration-500 text-[0.9rem] pc:text-[1rem]
+  }
+
+  a {
+    @apply cursor-pointer transition-all duration-300 text-black no-underline
+  }
+
+  textarea {
+    @apply resize-none
+  }
+
+  input {
+    @apply border-0 bg-transparent
+  }
+
+  table {
+    @apply w-full border border-[#ccc] collapse
+  }
+
+  img {
+    @apply w-full h-auto block my-auto mx-0
+  }
+
+  button {
+    @apply border-0 bg-transparent transition-all duration-300
+  }
+
+  article>div {
+    @apply pt-25 pb-20 max-w-300 my-0 mx-auto;
+    @apply pc:py-37.5 pc:px-0;
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+}
+
+@media screen and (min-width: 1366px) {
+
+  article>div {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+}

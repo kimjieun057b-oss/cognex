@@ -81,7 +81,7 @@ export default function Footer({
               {navLinks.map((link) => (
                 <li key={link.href}>
                   <Link
-                    href={localeHref(lang, link.href)}
+                    href={localeHref(lang, "/")}
                     className="text-sm text-white/60 hover:text-white transition-colors"
                   >
                     {link.label}
@@ -97,7 +97,7 @@ export default function Footer({
               {navLinks.map((link) => (
                 <li key={link.href}>
                   <Link
-                    href={localeHref(lang, link.href)}
+                    href={localeHref(lang, "/")}
                     className="text-sm text-white/60 hover:text-white transition-colors"
                   >
                     {link.label}
@@ -150,7 +150,7 @@ export default function Footer({
               {legalLinks.map((link) => (
                 <li key={link.href}>
                   <Link
-                    href={localeHref(lang, link.href)}
+                    href={localeHref(lang, "/")}
                     className="text-xs text-white/40 hover:text-white/70 transition-colors"
                   >
                     {link.label}

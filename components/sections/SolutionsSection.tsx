@@ -99,7 +99,7 @@ export default function SolutionsSection({
             </h2>
           </div>
           <Link
-            href={localeHref(lang, "/solutions")}
+           href={localeHref(lang, "/")}
             className="hidden pc:inline-flex items-center gap-1.5 text-sm font-medium text-dark border border-border rounded-full px-4 py-2 hover:bg-gray-50 transition-colors shrink-0"
           >
             {dict.viewAllLabel}
@@ -193,7 +193,7 @@ export default function SolutionsSection({
               {content.body}
             </p>
             <Link
-              href={localeHref(lang, content.href)}
+             href={localeHref(lang, "/")}
               className="inline-flex items-center gap-1.5 text-sm font-semibold text-dark hover:underline self-start"
             >
               {dict.detailLabel}
@@ -205,7 +205,7 @@ export default function SolutionsSection({
         {/* 모바일 전체 보기 */}
         <div className="pc:hidden mt-6 text-center">
           <Link
-            href={localeHref(lang, "/solutions")}
+            href={localeHref(lang, "/")}
             className="inline-flex items-center gap-1.5 text-sm font-medium text-dark border border-border rounded-full px-5 py-2.5"
           >
             {dict.viewAllLabel} <ArrowUpRightIcon className="w-3.5 h-3.5" />

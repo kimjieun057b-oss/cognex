@@ -15,17 +15,7 @@ import {
   CloseIcon,
   ArrowUpRightIcon,
 } from "@/components/icons";
-
-function CognexLogo({ dark = false }: { dark?: boolean }) {
-  return (
-    <span
-      className={`text-xl font-bold tracking-[0.15em] ${dark ? "text-dark" : "text-white"}`}
-      style={{ fontFamily: "inherit", letterSpacing: "0.12em" }}
-    >
-      COGNEX
-    </span>
-  );
-}
+import Image from "next/image";
 
 function LanguageSwitcher({
   lang,
@@ -37,7 +27,6 @@ function LanguageSwitcher({
   variant: "pc" | "mobile";
 }) {
   const [open, setOpen] = useState(false);
-  const pathname = usePathname();
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -50,11 +39,6 @@ function LanguageSwitcher({
     document.addEventListener("mousedown", onClickOutside);
     return () => document.removeEventListener("mousedown", onClickOutside);
   }, [open]);
-
-  const switchHref = (target: Locale) => {
-    const rest = pathname.split("/").slice(2).join("/");
-    return `/${target}${rest ? `/${rest}` : ""}`;
-  };
 
   return (
     <div ref={containerRef} className="relative">
@@ -82,7 +66,7 @@ function LanguageSwitcher({
           {locales.map((locale) => (
             <li key={locale} role="none">
               <Link
-                href={switchHref(locale)}
+                href="/"
                 role="menuitem"
                 onClick={() => setOpen(false)}
                 className={`block px-4 py-2 text-sm hover:bg-gray-100 transition-colors ${
@@ -124,7 +108,7 @@ export default function Header({
         <div className="hidden pc:block bg-white border-b border-border">
           <div className="max-w-400 mx-auto px-10 flex items-center justify-between h-18">
             <Link href={localeHref(lang, "/")} aria-label={dict.homeAria}>
-              <CognexLogo dark />
+              <Image src="/images/logo-black.png" alt="logo" width={120} height={40} />
             </Link>
 
             <div className="flex items-center gap-3">
@@ -164,7 +148,7 @@ export default function Header({
               {gnbLinks.map((link) => (
                 <li key={link.href}>
                   <Link
-                    href={localeHref(lang, link.href)}
+                    href={localeHref(lang, "/")}
                     className="text-sm text-white/70 hover:text-white transition-colors py-4 block"
                   >
                     {link.label}
@@ -178,7 +162,7 @@ export default function Header({
         {/* ── 모바일 헤더 바 ── */}
         <div className="pc:hidden bg-dark-nav h-12 flex items-center justify-between px-5">
           <Link href={localeHref(lang, "/")} aria-label={dict.homeAria}>
-            <CognexLogo />
+            <Image src="/images/logo-white.png" alt="logo" width={120} height={40} />
           </Link>
 
           <div className="flex items-center gap-4">
@@ -215,7 +199,7 @@ export default function Header({
               {mobileNavLinks.map((link) => (
                 <li key={link.href} className="border-b border-border">
                   <Link
-                    href={localeHref(lang, link.href)}
+                    href={localeHref(lang, "/")}
                     className="flex items-center justify-between px-5 py-4 text-base font-medium text-dark hover:bg-gray-50 transition-colors"
                     onClick={() => setMobileOpen(false)}
                   >
@@ -236,7 +220,7 @@ export default function Header({
                 {dict.mobileCta.line2}
               </p>
               <Link
-                href={localeHref(lang, "/products")}
+                href={localeHref(lang, "/")}
                 className="flex items-center gap-1 text-sm font-medium text-dark hover:underline"
                 onClick={() => setMobileOpen(false)}
               >
