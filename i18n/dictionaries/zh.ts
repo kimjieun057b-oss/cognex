@@ -74,6 +74,7 @@ const zh: Dictionary = {
   coreFeatures: {
     ariaLabel: "核心优势区域",
     title: "选择Cognex的理由",
+    viewAllLabel: "查看全部",
     features: [
       {
         title: "解决复杂自动化难题",
@@ -156,6 +157,37 @@ const zh: Dictionary = {
       { title: "高性能条码机器视觉指南", body: "在多种条码类型与环境下确保最佳识读率的技术简报。" },
       { title: "消费品品质保障解决方案", body: "在消费品产线上利用AI视觉实时检测外观不良与标签错误的案例。" },
       { title: "AI驱动的自动缺陷检测", body: "快速部署基于深度学习的缺陷检测模型并应用于现场的实战指南。" },
+    ],
+  },
+
+  successStories: {
+    ariaLabel: "客户成功案例区域",
+    eyebrow: "SUCCESS STORIES",
+    title: "借助Cognex取得成功的客户案例",
+    viewAllLabel: "查看全部",
+    detailLabel: "查看详情",
+    slideAria: (i, title) => `成功案例 ${i + 1}: ${title}`,
+    items: [
+      {
+        title: "Panpass Technology如何以数字化方式革新产品生命周期管理",
+        heading: "从提升品质到守护品牌声誉",
+        body: "以99.9%的卓越代码识读准确率大幅提升品质与效率,并改善供应链的全程可追溯性与透明度。由此全面保护品牌,增强客户忠诚度,守护企业声誉。",
+      },
+      {
+        title: "施耐德电气如何借助Cognex OneVision实现AI检测标准化",
+        heading: "从检测精度到集成速度的双重提升",
+        body: "基于OneVision平台实现AI检测标准化,将误判(假拒绝)次数减少70倍,提升作业效率并减少不必要的浪费。新检测应用的集成时间缩短30%,并通过扩大检测覆盖范围大幅提升了检测精度。",
+      },
+      {
+        title: "Federal Package实现99%以上的缺陷检出率",
+        heading: "从全数检测到完美品质承诺",
+        body: "通过100%产品检测率的全数检测,将缺陷检出精度提升至99%以上,完美兑现了对客户卓越品质的品牌承诺,带来令人满意的成果。",
+      },
+      {
+        title: "Wipro PARI如何利用AI解决电动车制造难题",
+        heading: "从检测速度到成本效益的全面优化",
+        body: "在兼顾众多组件配置的同时,加快了电动车电池模组的检测速度。通过EtherInspect创建多个虚拟相机,部署了具有成本效益的解决方案;并结合视觉引导机器人、视觉软件与条码扫描器,共同提升了产能与可追溯性。",
+      },
     ],
   },
 };

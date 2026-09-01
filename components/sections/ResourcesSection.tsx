@@ -8,6 +8,7 @@ import Link from "next/link";
 import type { Dictionary } from "@/i18n/dictionaries";
 import type { Locale } from "@/i18n/locales";
 import { localeHref } from "@/i18n/href";
+import { RESOURCE_STATIC } from "@/datas/resources";
 
 /* ── 아이콘 ── */
 function ChevronLeft() {
@@ -31,16 +32,6 @@ function ArrowUpRight() {
     </svg>
   );
 }
-
-/* ── 정적 데이터 (카테고리 태그/이미지/href — 언어 무관) ── */
-const RESOURCE_STATIC = [
-  { category: "CASE STUDY", image: "/images/solution-semiconductor.png", href: "/resources/qc-vision" },
-  { category: "APPLICATION NOTE", image: "/images/product-vision-sensor.png", href: "/resources/insight-2000" },
-  { category: "WHITE PAPER", image: "/images/product-robot-vision.png", href: "/resources/amr-vision" },
-  { category: "TECH BRIEF", image: "/images/solution-barcode.png", href: "/resources/barcode-guide" },
-  { category: "CASE STUDY", image: "/images/solution-bottle-inspection.png", href: "/resources/consumer-goods" },
-  { category: "APPLICATION NOTE", image: "/images/solution-ai-inspection.png", href: "/resources/ai-defect" },
-] as const;
 
 type Resource = {
   category: string;
@@ -86,53 +77,53 @@ export default function ResourcesSection({
     <section
       id="resources"
       aria-label={dict.ariaLabel}
-      className="bg-dark-nav py-20 pc:py-28 overflow-hidden"
+      className="relative overflow-hidden bg-dark-nav bg-[url('/images/resources-background.png')] bg-cover bg-center"
     >
-      <div className="max-w-300 mx-auto px-5 pc:px-10">
+      <span className="absolute inset-0 bg-black/65" aria-hidden="true" />
 
-        {/* ── 헤더 ── */}
-        <div className="flex items-end justify-between mb-10 pc:mb-12">
-          <div>
-            <p className="text-[11px] font-bold tracking-[0.2em] text-primary uppercase mb-3">
-              POPULAR RESOURCES
-            </p>
-            <h2 className="text-[1.85rem] pc:text-[2.4rem] font-bold text-white leading-tight">
-              {dict.title}
-            </h2>
-          </div>
+      <div className="relative">
 
-          {/* 화살표 버튼 */}
-          <div className="flex items-center gap-2 shrink-0">
-            <button
-              type="button"
-              aria-label={dict.prevAria}
-              onClick={() => sliderRef.current?.slickPrev()}
-              className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white hover:border-white/60 hover:bg-white/10 transition-all"
-            >
-              <ChevronLeft />
-            </button>
-            <button
-              type="button"
-              aria-label={dict.nextAria}
-              onClick={() => sliderRef.current?.slickNext()}
-              className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white hover:border-white/60 hover:bg-white/10 transition-all"
-            >
-              <ChevronRight />
-            </button>
+        <div>
+          <div className="flex items-end justify-between mb-10 pc:mb-12">
+            <div>
+              <p className="text-[11px] font-bold tracking-[0.2em] text-primary uppercase mb-3">
+                POPULAR RESOURCES
+              </p>
+              <h2 className="text-[1.85rem] pc:text-[2.4rem] font-bold text-white leading-tight">
+                {dict.title}
+              </h2>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <button
+                type="button"
+                aria-label={dict.prevAria}
+                onClick={() => sliderRef.current?.slickPrev()}
+                className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white hover:border-white/60 hover:bg-white/10 transition-all"
+              >
+                <ChevronLeft />
+              </button>
+              <button
+                type="button"
+                aria-label={dict.nextAria}
+                onClick={() => sliderRef.current?.slickNext()}
+                className="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center text-white hover:border-white/60 hover:bg-white/10 transition-all"
+              >
+                <ChevronRight />
+              </button>
+            </div>
           </div>
         </div>
 
-      </div>
+        <div>
+          <Slider ref={sliderRef} {...settings}>
+            {resources.map((r) => (
+              <div key={r.href} className="pr-4 pc:pr-5">
+                <ResourceCard resource={r} lang={lang} detailLabel={dict.detailLabel} />
+              </div>
+            ))}
+          </Slider>
+        </div>
 
-      {/* ── 슬라이더 (컨테이너 밖까지 넘침) ── */}
-      <div className="pl-5 pc:pl-[max(1.25rem,calc(50vw-580px))]">
-        <Slider ref={sliderRef} {...settings}>
-          {resources.map((r) => (
-            <div key={r.href} className="pr-4 pc:pr-5">
-              <ResourceCard resource={r} lang={lang} detailLabel={dict.detailLabel} />
-            </div>
-          ))}
-        </Slider>
       </div>
 
     </section>

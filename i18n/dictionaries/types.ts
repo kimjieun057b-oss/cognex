@@ -76,6 +76,7 @@ export interface Dictionary {
   coreFeatures: {
     ariaLabel: string;
     title: string;
+    viewAllLabel: string;
     features: [
       { title: string; body: string },
       { title: string; body: string },
@@ -138,6 +139,21 @@ export interface Dictionary {
       { title: string; body: string },
       { title: string; body: string },
       { title: string; body: string },
+    ];
+  };
+
+  successStories: {
+    ariaLabel: string;
+    eyebrow: string;
+    title: string;
+    viewAllLabel: string;
+    detailLabel: string;
+    slideAria: (index: number, title: string) => string;
+    items: [
+      { title: string; heading: string; body: string },
+      { title: string; heading: string; body: string },
+      { title: string; heading: string; body: string },
+      { title: string; heading: string; body: string },
     ];
   };
 }

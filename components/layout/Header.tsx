@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { siteConfig } from "@/config/site";
 import { locales, localeNames, type Locale } from "@/i18n/locales";
 import { localeHref } from "@/i18n/href";
@@ -50,11 +49,11 @@ function LanguageSwitcher({
         onClick={() => setOpen((prev) => !prev)}
         className={
           variant === "pc"
-            ? "p-2 rounded-full border border-border hover:bg-gray-100 transition-colors"
-            : ""
+            ? "p-2 rounded-full bg-dark hover:opacity-90 transition-opacity"
+            : "p-1.5 rounded-full bg-dark hover:opacity-90 transition-opacity"
         }
       >
-        <GlobeIcon className={`w-5 h-5 ${variant === "mobile" ? "text-white" : ""}`} />
+        <GlobeIcon className="w-4 h-4 text-white" />
       </button>
 
       {open && (
@@ -106,14 +105,14 @@ export default function Header({
       <header className="sticky top-0 z-50">
         {/* ── PC 상단 흰색 바 ── */}
         <div className="hidden pc:block bg-white border-b border-border">
-          <div className="max-w-400 mx-auto px-10 flex items-center justify-between h-18">
+          <div className="max-w-300 mx-auto px-10 flex items-center justify-between h-18">
             <Link href={localeHref(lang, "/")} aria-label={dict.homeAria}>
-              <Image src="/images/logo-black.png" alt="logo" width={120} height={40} />
+              <Image src="/icons/logo-black.png" alt="logo" width={120} height={40} />
             </Link>
 
             <div className="flex items-center gap-3">
               {/* 검색창 */}
-              <label className="flex items-center gap-2 border border-border rounded-full px-4 py-2 w-64 cursor-text hover:border-muted transition-colors">
+              <label className="flex items-center gap-2 border border-border rounded-full px-4 py-2.5 w-64 cursor-text hover:border-muted transition-colors">
                 <SearchIcon className="w-4 h-4 text-muted shrink-0" />
                 <input
                   type="search"
@@ -126,10 +125,10 @@ export default function Header({
               {/* MyCognex */}
               <button
                 type="button"
-                className="flex items-center gap-1 text-sm font-medium px-3 py-2 rounded hover:bg-gray-100 transition-colors"
+                className="flex items-center gap-1.5 text-sm font-medium text-muted px-4 py-2.5 rounded-full border border-border hover:border-muted transition-colors"
               >
-                {dict.myCognex}
                 <ChevronDownIcon className="w-3 h-3" />
+                {dict.myCognex}
               </button>
 
               {/* 언어 */}
@@ -143,8 +142,8 @@ export default function Header({
           className="hidden pc:block bg-dark-nav"
           aria-label={dict.navAria}
         >
-          <div className="max-w-400 mx-auto px-10">
-            <ul className="flex items-center justify-center gap-10 h-12">
+          <div className="max-w-300 mx-auto px-10">
+            <ul className="flex items-center gap-10 h-12">
               {gnbLinks.map((link) => (
                 <li key={link.href}>
                   <Link
@@ -160,14 +159,18 @@ export default function Header({
         </nav>
 
         {/* ── 모바일 헤더 바 ── */}
-        <div className="pc:hidden bg-dark-nav h-12 flex items-center justify-between px-5">
+        <div className="pc:hidden bg-white border-b border-border h-12 flex items-center justify-between px-5">
           <Link href={localeHref(lang, "/")} aria-label={dict.homeAria}>
-            <Image src="/images/logo-white.png" alt="logo" width={120} height={40} />
+            <Image src="/icons/logo-black.png" alt="logo" width={100} height={34} />
           </Link>
 
-          <div className="flex items-center gap-4">
-            <button type="button" aria-label={dict.searchAria}>
-              <SearchIcon className="w-5 h-5 text-white" />
+          <div className="flex items-center gap-2.5">
+            <button
+              type="button"
+              aria-label={dict.searchAria}
+              className="p-1.5 rounded-full border border-border hover:border-muted transition-colors"
+            >
+              <SearchIcon className="w-4 h-4 text-dark" />
             </button>
             <LanguageSwitcher lang={lang} ariaLabel={dict.languageAria} variant="mobile" />
             <button
@@ -175,11 +178,12 @@ export default function Header({
               aria-label={mobileOpen ? dict.menuCloseAria : dict.menuOpenAria}
               aria-expanded={mobileOpen}
               onClick={() => setMobileOpen((prev) => !prev)}
+              className="p-1"
             >
               {mobileOpen ? (
-                <CloseIcon className="w-5 h-5 text-white" />
+                <CloseIcon className="w-5 h-5 text-dark" />
               ) : (
-                <HamburgerIcon className="w-5 h-5 text-white" />
+                <HamburgerIcon className="w-5 h-5 text-dark" />
               )}
             </button>
           </div>

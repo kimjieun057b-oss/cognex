@@ -4,7 +4,6 @@
 @theme {
   /* Brand */
   --color-primary: #FFEC38;
-  --color-primary-hover: #F5C400;
 
   /* Surfaces */
   --color-surface: #ffffff;
@@ -21,7 +20,8 @@
   --breakpoint-pc: 1366px;
 }
 
- * {
+@layer base {
+  * {
     margin: 0;
     padding: 0;
     list-style: none;
@@ -31,10 +31,11 @@
     font-family: 'Noto Sans KR', sans-serif;
   }
 
-body {
-  color: #1c1c1c;
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
+  body {
+    color: #1c1c1c;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
 }
 
 /* 탭 전환 페이드인 */
@@ -103,7 +104,7 @@ body {
     @apply border-0 bg-transparent transition-all duration-300
   }
 
-  article>div {
+  section>div {
     @apply pt-25 pb-20 max-w-300 my-0 mx-auto;
     @apply pc:py-37.5 pc:px-0;
     padding-left: 5%;
@@ -113,7 +114,7 @@ body {
 
 @media screen and (min-width: 1366px) {
 
-  article>div {
+  section>div {
     padding-left: 0;
     padding-right: 0;
   }

@@ -74,6 +74,7 @@ const en: Dictionary = {
   coreFeatures: {
     ariaLabel: "Core features section",
     title: "Why Choose Cognex",
+    viewAllLabel: "View All",
     features: [
       {
         title: "Solving Complex Automation Challenges",
@@ -156,6 +157,37 @@ const en: Dictionary = {
       { title: "High-Performance Barcode Machine Vision Guide", body: "A technical brief on achieving optimal read rates across various barcode types and environments." },
       { title: "Quality Assurance Solutions for Consumer Goods", body: "A case study on real-time detection of appearance defects and label errors using AI vision on a consumer goods line." },
       { title: "AI-Powered Automated Defect Detection", body: "A practical guide to quickly deploying and applying deep-learning-based defect detection models on the factory floor." },
+    ],
+  },
+
+  successStories: {
+    ariaLabel: "Customer success stories section",
+    eyebrow: "SUCCESS STORIES",
+    title: "Customers Succeeding with Cognex",
+    viewAllLabel: "View All",
+    detailLabel: "View Details",
+    slideAria: (i, title) => `Success story ${i + 1}: ${title}`,
+    items: [
+      {
+        title: "How Panpass Technology digitally transformed product lifecycle management",
+        heading: "Beyond quality, protecting brand reputation",
+        body: "A 99.9% code-reading accuracy rate dramatically improves quality and efficiency while enhancing end-to-end traceability and transparency across the supply chain. This safeguards the brand and strengthens customer loyalty, protecting the company's reputation.",
+      },
+      {
+        title: "How Schneider Electric standardized AI inspection with Cognex OneVision",
+        heading: "Beyond inspection accuracy, faster integration",
+        body: "Standardizing AI inspection on the OneVision platform cut false rejects 70x, improving operational efficiency and reducing unnecessary waste. Integration time for new inspection applications dropped by 30%, and expanded inspection coverage significantly boosted detection accuracy.",
+      },
+      {
+        title: "Federal Package achieves a defect detection rate above 99%",
+        heading: "Beyond full inspection, a perfect quality promise",
+        body: "100% product inspection coverage pushed defect detection accuracy above 99%. This fully delivers on the brand's promise of outstanding quality to customers, driving satisfying results.",
+      },
+      {
+        title: "How Wipro PARI is solving EV manufacturing challenges with AI",
+        heading: "Beyond inspection speed, cost efficiency",
+        body: "Inspection of EV battery modules was accelerated even while accounting for numerous component configurations. EtherInspect was used to create multiple virtual cameras for a cost-effective deployment, while vision-guided robots, vision software, and barcode scanners together improved throughput and traceability.",
+      },
     ],
   },
 };

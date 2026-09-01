@@ -1,14 +1,67 @@
 # Cognex 기업 홈페이지 메인 화면 리디자인 프로젝트
-- Figma MCP Server 와 Claude 연동하여 활용
-- 토큰 소비량이 많아 역할 분담을 나누기로 결정
-    - me: 이미지 추출, 이미지 이름 변경, 페이지 폴더링, 홈페이지 세팅 (메타, og, sitemap,xml, robots.txt 등), 기본 마크업(혹은 Section 하나씩만 MCP 호출하여 진행)
-    - you: 난이도 있는 인터랙션, 애니메이션 모션, 기능구현, 보안 검증
-    - 26.08.07 : 디자인시스템, 이미지추출, 폴더링 없이 메인화면 구축 토큰 사용량 약 32%
-- MCP를 섹션별로 쪼개서 호출하면 토큰 소모량을 아껴준다.
-- AI는  이전 질문과 이전 답변 전체를 매번 다시 읽으며(Context Accumulation) 다음 답변을 생성하게 되는데 만약 1번섹션만 수정 시, 전체 데이터에서 1번섹션을 찾는데도 토큰이 소비됨
-- 한 섹션 완성되면 새로운 채팅 열기
 
----
+## 프로젝트 개요
+
+기존 Cognex 기업 홈페이지의 메인 화면을 리디자인하여, Next.js(App Router) 기반의 인터랙티브 UI와 Accessibility/SEO 구조로 새로 구현한 단일 페이지(SPA) 프로젝트다.
+
+- **목표**: UI/UX 개선을 통한 브랜드 전문성·신뢰도 제고, SEO/GEO 최적화를 통한 검색 노출 증대
+- **범위**: 확정된 Figma 디자인 기반의 메인페이지 완전 구현(모션/애니메이션 포함). 서브페이지 라우팅, 회원가입/로그인 등은 범위 밖
+- **대상**: 제품 도입을 검토하는 B2B 담당자, 브랜드 정보를 확인하려는 일반 방문자 — Mobile First로 전 디바이스 대응(단일 브레이크포인트 `pc: 1366px`)
+- **기술 스택**: Next.js(App Router) · TypeScript · Tailwind CSS v4(`app/globals.css`의 `@theme` 토큰 기반) · Vercel 배포
+
+상세 요구사항은 [`docs/PRD.md`](docs/PRD.md), 개발 규칙은 [`docs/RULE.md`](docs/RULE.md)에 정리되어 있다.
+
+## 폴더 구조
+
+```
+cgnx/
+├─ app/
+│  ├─ [lang]/            ← 언어별 동적 라우트 (layout.tsx, page.tsx)
+│  └─ globals.css        ← Tailwind 테마 토큰(@theme) 정의
+├─ components/
+│  ├─ layout/             ← Header, Footer (모든 언어 페이지 공통)
+│  ├─ sections/            ← 메인페이지를 구성하는 섹션 단위 컴포넌트
+│  └─ icons.tsx            ← 공용 SVG 아이콘 모음
+├─ config/
+│  └─ site.ts              ← 브랜드명·연락처·GNB/Footer 링크 등 사이트 전역 상수
+├─ datas/                  ← 섹션에서 쓰는 정적 목록 데이터(산업군, 애플리케이션, 고객 사례 등)
+├─ i18n/
+│  ├─ dictionaries/        ← 언어별 번역 데이터(ko/en/ja/zh) + 공통 타입
+│  ├─ locales.ts           ← 지원 언어 목록/표시명
+│  ├─ href.ts               ← 언어 프리픽스 링크 헬퍼
+│  └─ resolve-locale.ts     ← URL의 lang 파라미터 검증/보정
+├─ docs/                   ← PRD, 개발 규칙, 콘텐츠 가이드, 디자인 레퍼런스 이미지
+├─ proxy.ts                ← 루트 접속 시 언어 감지 후 리다이렉트 (구 middleware.ts)
+└─ public/                 ← 이미지·아이콘 정적 에셋
+```
+
+## 컴포넌트가 분리된 방식
+
+**`layout/`과 `sections/`을 분리한 이유**는 성격이 다르기 때문이다. `layout/`(Header, Footer)은 모든 페이지에 공통으로 붙는 뼈대이고, `sections/`은 메인페이지 한 곳에서만 순서대로 나열되는 콘텐츠 블록이다. `app/[lang]/page.tsx`는 이 섹션 컴포넌트들을 기획서(`docs/PRD.md`)의 섹션 순서 그대로 import해서 나열하는 조립부 역할만 하고, 각 섹션의 내부 마크업·상태·인터랙션은 해당 컴포넌트 파일 안에 캡슐화되어 있다. 페이지 파일만 봐도 전체 구성이 한눈에 보이고, 섹션 하나를 수정할 때 다른 섹션에 영향을 주지 않는다.
+
+**섹션별 구성과 목적** (PRD 기준 7개 섹션, Success Stories는 미구현):
+
+| 섹션 컴포넌트 | 목적 | 핵심 인터랙션 |
+|---|---|---|
+| `HeroSection` | 강력한 첫인상과 핵심 가치 제안 | 자동 슬라이드 + 진행 게이지 애니메이션 |
+| `CompanySection` | 회사 개요(연혁·기술·주요 산업) 전달 | 스크롤 진입 시 숫자 카운트업(`IntersectionObserver`) |
+| `CoreFeaturesSection` | 선택 이유를 카드형으로 어필 | hover 시 포인트 컬러 전환 |
+| `ProductsSection` | 주요 제품 카테고리 소개 | hover(PC)/tap(모바일) 시 해당 카드가 확장되는 아코디언 |
+| `SolutionsSection` | 애플리케이션/산업별 기술 적용 사례 요약 | 탭 전환으로 콘텐츠 교체, 모바일은 가로 스크롤 탭 |
+| `ResourcesSection` | 기술 자료 제공으로 신뢰도 구축 | 캐러셀(`react-slick`) 슬라이드 |
+
+**섹션 내부 구성 원칙**은 대부분 같은 패턴을 따른다.
+
+1. 이미지 경로·링크(href)·태그처럼 **언어와 무관한 값**은 컴포넌트 상단에 `_STATIC` 상수 배열로 고정한다.
+2. 제목·본문 같은 **텍스트만** `dict`(번역 데이터)에서 받아, `index` 기준으로 static 배열과 합쳐(`map`) 사용한다.
+
+```ts
+// components/sections/ProductsSection.tsx
+const PRODUCT_STATIC = [{ tag: "...", image: "...", href: "/products/vision-systems" }, /* ... */];
+const products = dict.items.map((item, i) => ({ ...item, ...PRODUCT_STATIC[i] }));
+```
+
+이렇게 나눈 이유는, 이미지·링크·아이콘은 언어가 바뀌어도 동일해야 하는 값인데 이걸 4개 언어 dictionary 파일에 전부 중복 기입하면 하나를 바꿀 때 4곳을 고쳐야 하고 실수로 어긋나기 쉽기 때문이다. 컴포넌트에 한 번만 고정해두고 텍스트만 언어별로 갈아 끼우는 구조로 **번역 데이터는 순수하게 텍스트 콘텐츠만 책임지도록** 역할을 나눴다. (다국어 처리 전체 구조는 아래 참고)
 
 ## 다국어(i18n) 지원
 

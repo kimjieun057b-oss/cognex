@@ -7,15 +7,9 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Locale } from "@/i18n/locales";
 import { localeHref } from "@/i18n/href";
+import { SLIDE_IMAGES } from "@/datas/hero";
 
 const SLIDE_DURATION = 5000;
-
-const SLIDE_IMAGES = [
-  "/images/product-insightai.png",
-  "/images/product-software.png",
-  "/images/product-vision-sensor.png",
-  "/images/product-3d-laser.png",
-] as const;
 
 export type HeroSlideView = {
   label: [string, string];
@@ -67,7 +61,7 @@ export default function HeroSection({
     <section id="hero" aria-label={ariaLabel} className="bg-dark-hero">
 
       {/* ── 메인 콘텐츠 ── */}
-      <div className="max-w-300 mx-auto px-5 pc:px-10">
+      <div>
         <div className="flex flex-col pc:flex-row pc:items-center pc:justify-between py-16 pc:py-24 gap-12 pc:gap-0">
 
           {/* 좌측: 고정 텍스트 */}
@@ -82,24 +76,24 @@ export default function HeroSection({
             </p>
             <Link
               href={localeHref(lang, "/")}
-              className="self-start bg-primary text-dark text-sm font-bold px-6 py-3 hover:bg-primary-hover transition-colors"
+              className="self-start bg-primary text-dark text-sm font-bold px-6 py-3 transition-colors"
             >
               {cta}
             </Link>
           </div>
 
           {/* 우측: 이미지 슬라이더 */}
-          <div className="mx-auto pc:mx-0 w-65 pc:w-90 rounded-3xl overflow-hidden bg-white/5 shrink-0">
+          <div className="mx-auto pc:mx-0 w-72 pc:w-105 shrink-0">
             <Slider ref={sliderRef} {...settings}>
               {slides.map((slide) => (
                 <div key={slide.image}>
-                  <div className="flex items-center justify-center h-65 pc:h-90">
+                  <div className="flex items-center justify-center h-72 pc:h-105">
                     <Image
                       src={slide.image}
                       alt={slide.alt}
-                      width={300}
-                      height={300}
-                      className="object-contain p-6 w-full h-full"
+                      width={600}
+                      height={600}
+                      className="object-contain w-full h-full"
                       priority={slide.image === SLIDE_IMAGES[0]}
                     />
                   </div>
