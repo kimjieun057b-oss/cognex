@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { siteConfig } from "@/config/site";
@@ -11,6 +12,7 @@ import {
   ArrowUpIcon,
   SearchIcon,
 } from "@/components/icons";
+import ProductFinderModal from "@/components/modals/ProductFinderModal";
 import type { Locale } from "@/i18n/locales";
 import { localeHref } from "@/i18n/href";
 import type { Dictionary } from "@/i18n/dictionaries";
@@ -34,17 +36,22 @@ export default function Footer({
     label: dict.legalLabels[i],
   }));
 
+  const [finderOpen, setFinderOpen] = useState(false);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
     <>
+      <ProductFinderModal lang={lang} open={finderOpen} onClose={() => setFinderOpen(false)} />
+
       {/* 우측 하단 플로팅 버튼: 검색 + 맨 위로 이동 */}
       <div className="fixed bottom-6 right-5 pc:right-10 z-50 flex flex-col items-center gap-3">
         <button
           type="button"
-          aria-label="검색"
+          aria-label="제품 찾기"
+          onClick={() => setFinderOpen(true)}
           className="w-11 h-11 rounded-full bg-white shadow-[0_2px_10px_rgba(0,0,0,0.15)] flex items-center justify-center hover:shadow-[0_4px_14px_rgba(0,0,0,0.2)] transition-shadow"
         >
           <SearchIcon className="w-4.5 h-4.5 text-black" />
