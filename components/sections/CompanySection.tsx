@@ -62,7 +62,7 @@ export default function CompanySection({ dict }: { dict: Dictionary["company"] }
 
   return (
     <section id="company" aria-label={dict.ariaLabel} className="bg-white overflow-hidden">
-      <div>
+      <div className="pb-0">
 
         {/* ── 상단: 텍스트 + 원형 탐색 ── */}
         <div

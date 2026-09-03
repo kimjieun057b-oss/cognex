@@ -1,7 +1,16 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { siteConfig } from "@/config/site";
-import { PhoneIcon, InstagramIcon, YoutubeIcon, ChevronDownIcon } from "@/components/icons";
+import {
+  PhoneIcon,
+  InstagramIcon,
+  YoutubeIcon,
+  ChevronDownIcon,
+  ArrowUpIcon,
+  SearchIcon,
+} from "@/components/icons";
 import type { Locale } from "@/i18n/locales";
 import { localeHref } from "@/i18n/href";
 import type { Dictionary } from "@/i18n/dictionaries";
@@ -25,8 +34,32 @@ export default function Footer({
     label: dict.legalLabels[i],
   }));
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
-    <footer className="bg-dark text-white" aria-label={dict.footerAria}>
+    <>
+      {/* 우측 하단 플로팅 버튼: 검색 + 맨 위로 이동 */}
+      <div className="fixed bottom-6 right-5 pc:right-10 z-50 flex flex-col items-center gap-3">
+        <button
+          type="button"
+          aria-label="검색"
+          className="w-11 h-11 rounded-full bg-white shadow-[0_2px_10px_rgba(0,0,0,0.15)] flex items-center justify-center hover:shadow-[0_4px_14px_rgba(0,0,0,0.2)] transition-shadow"
+        >
+          <SearchIcon className="w-4.5 h-4.5 text-black" />
+        </button>
+        <button
+          type="button"
+          aria-label="맨 위로 이동"
+          onClick={scrollToTop}
+          className="w-11 h-11 rounded-full bg-primary flex items-center justify-center hover:opacity-90 transition-opacity"
+        >
+          <ArrowUpIcon className="w-4.5 h-4.5 text-black" />
+        </button>
+      </div>
+
+      <footer className="bg-dark text-white" aria-label={dict.footerAria}>
       <div className="max-w-300 mx-auto px-5 pc:px-10 pt-12 pc:pt-16 pb-8">
         {/* ── 상단 콘텐츠 영역 ── */}
         <div className="flex flex-col gap-10 pc:flex-row pc:justify-between pc:gap-16">
@@ -172,5 +205,6 @@ export default function Footer({
         </div>
       </div>
     </footer>
+    </>
   );
 }

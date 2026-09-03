@@ -58,10 +58,10 @@ export default function HeroSection({
   };
 
   return (
-    <section id="hero" aria-label={ariaLabel} className="bg-dark-hero">
+    <div id="hero" role="region" aria-label={ariaLabel} className="bg-dark-hero">
 
       {/* ── 메인 콘텐츠 ── */}
-      <div>
+      <div className="max-w-300 mx-auto px-5 pc:px-10">
         <div className="flex flex-col pc:flex-row pc:items-center pc:justify-between py-16 pc:py-24 gap-12 pc:gap-0">
 
           {/* 좌측: 고정 텍스트 */}
@@ -76,7 +76,7 @@ export default function HeroSection({
             </p>
             <Link
               href={localeHref(lang, "/")}
-              className="self-start bg-primary text-dark text-sm font-bold px-6 py-3 transition-colors"
+              className="self-start bg-primary text-dark rounded-full text-sm font-bold px-6 py-3 transition-colors"
             >
               {cta}
             </Link>
@@ -181,6 +181,6 @@ export default function HeroSection({
 
         </div>
       </div>
-    </section>
+    </div>
   );
 }

@@ -25,7 +25,7 @@ export default function ProductsSection({
 
       {/* ── PC: 균등 너비 + 호버 시 배경 이미지 ── */}
       <div
-        className="hidden pc:flex h-145 w-full max-w-none m-0 p-0 border-t border-border"
+        className="hidden pc:flex h-250 w-full max-w-none m-0 p-0 border-t border-border"
         onMouseLeave={() => setActive(0)}
       >
         {products.map((p, i) => {
@@ -79,23 +79,19 @@ export default function ProductsSection({
               </div>
 
               {/* 제품 이미지 */}
-              <div
-                className="absolute bottom-0 left-0 right-0 z-10"
-                style={{
-                  height: isActive ? "58%" : "50%",
-                  transition: "height 0.5s ease",
-                }}
-              >
+              <div className="absolute bottom-0 left-0 right-0 z-10 flex justify-center pb-6">
                 <Image
                   src={p.image}
                   alt={p.alt}
-                  fill
-                  className="object-contain object-bottom p-6"
+                  width={1024}
+                  height={1024}
+                  className="object-contain"
                   style={{
-                    transform: isActive ? "scale(1.12)" : "scale(1)",
-                    transition: "transform 0.5s ease",
+                    width: isActive ? "283px" : "200px",
+                    height: "auto",
+                    transition: "width 0.5s ease",
                   }}
-                  sizes="16vw"
+                  sizes="300px"
                 />
               </div>
             </article>
@@ -112,8 +108,8 @@ export default function ProductsSection({
               key={p.tag}
               className="relative overflow-hidden cursor-pointer bg-white"
               style={{
-                height: isActive ? "260px" : "68px",
-                transition: "height 0.5s ease",
+                height: isActive ? "277px" : "200px",
+                transition: "height 0.5s ease, background-color 0.5s ease",
               }}
               onClick={() => setActive(isActive ? 0 : i)}
             >
@@ -124,7 +120,8 @@ export default function ProductsSection({
                 aria-hidden="true"
               />
 
-              <div className="relative z-10 px-5 py-4">
+              {/* 상단 텍스트 */}
+              <div className="relative z-10 px-5 pt-9 pr-28">
                 <p
                   className={`text-[9px] font-bold tracking-widest uppercase mb-1 truncate transition-colors duration-300 ${
                     isActive ? "text-dark" : "text-dark/30"
@@ -132,47 +129,51 @@ export default function ProductsSection({
                 >
                   {p.tag}
                 </p>
-                <h3 className="text-sm font-bold text-dark leading-tight">
-                  {p.title.replace("\n", " ")}
-                </h3>
-                {/* 자세히 보기 — 활성 시에만 노출 */}
-                <div
-                  className="overflow-hidden"
-                  style={{
-                    maxHeight: isActive ? "24px" : "0px",
-                    marginTop: isActive ? "8px" : "0px",
-                    opacity: isActive ? 1 : 0,
-                    transition: "max-height 0.4s ease, margin-top 0.3s ease, opacity 0.4s ease 0.1s",
-                  }}
+                <h3
+                  className={`text-sm font-bold leading-tight whitespace-pre-line transition-colors duration-300 ${
+                    isActive ? "text-dark" : "text-dark/80"
+                  }`}
                 >
-                  <Link
-                    href={localeHref(lang, "/")}
-                    className="inline-flex items-center gap-1 text-xs font-semibold text-dark hover:underline"
-                    tabIndex={isActive ? 0 : -1}
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    {dict.detailLabel}
-                    <ArrowUpRightIcon className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
+                  {p.title}
+                </h3>
               </div>
 
-              {/* 이미지 (활성 시) */}
+              {/* 자세히 보기 — 활성 시에만 노출, 좌측 하단 */}
               <div
-                className="absolute bottom-0 left-0 right-0 h-36 z-10"
+                className="absolute left-5 bottom-5 z-10 overflow-hidden"
                 style={{
+                  maxHeight: isActive ? "24px" : "0px",
                   opacity: isActive ? 1 : 0,
-                  transition: "opacity 0.3s ease",
+                  transform: isActive ? "translateY(0)" : "translateY(6px)",
+                  transition:
+                    "max-height 0.4s ease, opacity 0.4s ease 0.1s, transform 0.4s ease 0.1s",
                 }}
               >
-                <Image
-                  src={p.image}
-                  alt={p.alt}
-                  fill
-                  className="object-contain object-bottom p-4"
-                  sizes="360px"
-                />
+                <Link
+                  href={localeHref(lang, "/")}
+                  className="inline-flex items-center gap-1 text-xs font-semibold text-dark hover:underline"
+                  tabIndex={isActive ? 0 : -1}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {dict.detailLabel}
+                  <ArrowUpRightIcon className="w-3.5 h-3.5" />
+                </Link>
               </div>
+
+              {/* 제품 이미지 — 우측 하단, 활성 시 확대 */}
+              <Image
+                src={p.image}
+                alt={p.alt}
+                width={1024}
+                height={1024}
+                className="absolute z-10 right-5 bottom-5 object-contain"
+                style={{
+                  width: isActive ? "135px" : "100px",
+                  height: "auto",
+                  transition: "width 0.5s ease",
+                }}
+                sizes="150px"
+              />
             </div>
           );
         })}

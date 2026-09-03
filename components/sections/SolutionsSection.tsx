@@ -78,7 +78,7 @@ export default function SolutionsSection({
           </span>
         </div>
 
-        {/* ── 애플리케이션 탭 (아이콘 + 레이블) ── */}
+        {/* ── 애플리케이션 탭 — 모바일: 아이콘 없이 한 줄 레이블 / PC: 아이콘 포함, 너비 균등 ── */}
         <div className="overflow-x-auto pb-1 mb-8 pc:mb-10 scrollbar-none">
           <div className="flex gap-2 min-w-max pc:min-w-0">
             {appTabs.map((t, i) => (
@@ -88,11 +88,13 @@ export default function SolutionsSection({
                 onClick={() => setAppTab(i)}
                 className={`flex flex-col items-center gap-2 px-4 py-3 pc:flex-1 pc:px-3 pc:py-4 rounded-xl text-xs font-medium transition-colors ${
                   appTab === i
-                    ? "bg-primary-hover text-dark"
+                    ? "bg-primary text-dark"
                     : "bg-zinc-100 text-muted hover:bg-zinc-200"
                 }`}
               >
-                <TabIcon name={t.icon} active={appTab === i} />
+                <span className="hidden pc:block">
+                  <TabIcon name={t.icon} active={appTab === i} />
+                </span>
                 <span className="whitespace-nowrap leading-tight text-center">
                   {t.label}
                 </span>

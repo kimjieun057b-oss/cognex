@@ -81,7 +81,7 @@ export default function ResourcesSection({
     >
       <span className="absolute inset-0 bg-black/65" aria-hidden="true" />
 
-      <div className="relative">
+      <div className="relative pb-10 pc:pb-37.5">
 
         <div>
           <div className="flex items-end justify-between mb-10 pc:mb-12">
